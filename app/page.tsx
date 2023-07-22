@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const initialState = [
   {
@@ -20,37 +21,93 @@ const initialState = [
   },
 ];
 
+const reorder = (
+  list: InitialState[],
+  startIndex: number,
+  endIndex: number
+) => {
+  const result = [...list];
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+
 export default function Home() {
   const [tareas, setTareas] = useState<InitialState[]>(initialState);
 
   return (
-    <div className="flex mt-3 justify-center gap-2">
-      {/*Columna 1*/}
-
-      <div className="bg-slate-300 p-4 mb-4  w-96">
-        {tareas.map((objeto) => (
-          <p className="mt-2 text-slate-700 border-solid border border-black bg-white rounded pl-2 break-words">
-            {objeto.content}
-          </p>
-        ))}
+    <DragDropContext
+      onDragEnd={(result) => {
+        const { source, destination } = result;
+        if (!destination) {
+          return;
+        }
+        if (
+          source.index === destination.index &&
+          source.droppableId === destination.droppableId
+        ) {
+          return;
+        }
+        setTareas((prevTareas) =>
+          reorder(prevTareas, source.index, destination.index)
+        );
+      }}
+    >
+      <div key={1} className="flex mt-3 justify-center gap-2">
+        {/*Columna 1*/}
+        <Droppable droppableId="tareasId">
+          {(droppableProvided) => (
+            <ul
+              {...droppableProvided.droppableProps}
+              ref={droppableProvided.innerRef}
+              className="bg-slate-300 p-4 mb-4  w-96"
+            >
+              {tareas.map((objeto, index) => (
+                <Draggable
+                  key={objeto.id}
+                  draggableId={objeto.id}
+                  index={index}
+                >
+                  {(draggableProvided) => (
+                    <li
+                      {...draggableProvided.draggableProps}
+                      ref={draggableProvided.innerRef}
+                      {...draggableProvided.dragHandleProps}
+                      className="mt-2 text-slate-700 border-solid border border-black bg-white rounded pl-2 break-words"
+                    >
+                      {objeto.content}
+                    </li>
+                  )}
+                </Draggable>
+              ))}
+              {droppableProvided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+        {/*Columna 2*/}
+        <div className="bg-slate-300 p-4 mb-4  w-96">
+          {tareas.map((objeto) => (
+            <p
+              key={objeto.id}
+              className="mt-2 text-slate-700 border-solid border border-black bg-white rounded pl-2 break-words"
+            >
+              {objeto.content}
+            </p>
+          ))}
+        </div>
+        {/*Columna 3*/}
+        <div className="bg-slate-300 p-4 mb-4  w-96">
+          {tareas.map((objeto) => (
+            <p
+              key={objeto.id}
+              className="mt-2 text-slate-700 border-solid border border-black bg-white rounded pl-2 break-words"
+            >
+              {objeto.content}
+            </p>
+          ))}
+        </div>
       </div>
-      {/*Columna 2*/}
-      <div className="bg-slate-300 p-4 mb-4  w-96">
-        {tareas.map((objeto) => (
-          <p className="mt-2 text-slate-700 border-solid border border-black bg-white rounded pl-2 break-words">
-            {objeto.content}
-          </p>
-        ))}
-      </div>
-      {/*Columna 3*/}
-      <div className="bg-slate-300 p-4 mb-4  w-96">
-        {tareas.map((objeto) => (
-          <p className="mt-2 text-slate-700 border-solid border border-black bg-white rounded pl-2 break-words">
-            {objeto.content}
-          </p>
-        ))}
-      </div>
-    </div>
+    </DragDropContext>
   );
 }
 
