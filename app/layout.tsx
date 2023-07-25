@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.className} bg-gradient-to-r from-indigo-500 to-pink-700 flex flex-col`}
+        className={`${roboto.className} bg-gradient-to-r from-indigo-500 to-pink-700`}
       >
         <Navbar />
         {children}
