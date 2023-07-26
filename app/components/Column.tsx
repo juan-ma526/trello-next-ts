@@ -10,10 +10,7 @@ type Props = {
 
 export default function Column({ id, column, tareas, index }: Props) {
   return (
-    <div
-      key={index}
-      className="flex flex-col  justify-center items-center gap-2 m-8 border-solid border-2 rounded bg-white"
-    >
+    <div className="flex flex-col  justify-center items-center gap-2 m-8 border-solid border-2 rounded bg-white">
       <h3 className="p-2">{column.title.toUpperCase()}</h3>
       <Droppable droppableId={column.id}>
         {(provided) => (

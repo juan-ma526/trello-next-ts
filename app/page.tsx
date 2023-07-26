@@ -87,6 +87,7 @@ export default function Home() {
           [newColumn.id]: newColumn,
         },
       };
+
       setPrueba(newState);
     } // termina el if
 
@@ -117,7 +118,7 @@ export default function Home() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div key={1} className="flex mt-3 justify-center gap-2">
+      <div className="flex mt-3 justify-center gap-2">
         {prueba.columnOrder.map((columnId, index) => {
           const column = prueba.columns[columnId];
           const tareas = column.taskid.map((taskId) => prueba.tasks[taskId]);
